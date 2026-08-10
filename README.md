@@ -86,10 +86,6 @@ Trip
 
 ---
 
-# Step 8 — Add the technology stack
-
-Since we're **starting with Firebase**, don't make the README sound like Node/Express is already implemented.
-
 ```md
 ---
 
