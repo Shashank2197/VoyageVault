@@ -224,7 +224,3 @@ blueprint have been established.
 ### Next milestone
 
 > **Sprint 1 — Technical Foundation & Project Setup**
-
-```
-
-```
