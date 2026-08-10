@@ -8,11 +8,9 @@ VoyageVault is a collaborative travel companion designed to bring trip planning,
 
 ## 🌍 What is VoyageVault?
 
-Planning a trip often means switching between multiple applications for
-budgets, itineraries, checklists, shared expenses, and photos.
+Planning a trip often means switching between multiple applications for budgets, itineraries, checklists, shared expenses, and photos.
 
-VoyageVault aims to bring these experiences together into a single
-collaborative travel application.
+VoyageVault aims to bring these experiences together into a single collaborative travel application.
 
 ---
 
@@ -68,11 +66,11 @@ VoyageVault uses five primary navigation sections:
 | 💰 Split   | Expenses and settlements         |
 | 👤 Profile | Account and application settings |
 
-Trip-specific functionality is organized within individual trips rather
-than becoming separate global navigation items.
+Trip-specific functionality is organized within individual trips rather than becoming separate global navigation items.
 
-````text
+```text
 Trip
+
 ├── Overview
 ├── Planner
 ├── Budget
@@ -82,12 +80,6 @@ Trip
 ├── Members
 ├── Expenses
 └── Gallery
-
-
----
-
-```md
----
 
 ## 🏗️ Technology Stack
 
@@ -225,4 +217,4 @@ blueprint have been established.
 ### Next milestone
 
 > **Sprint 1 — Technical Foundation & Project Setup**
-````
+```
