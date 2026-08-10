@@ -81,21 +81,28 @@ Trip
 ├── Expenses
 └── Gallery
 
+```
+
+---
+
 ## 🏗️ Technology Stack
 
 ### Mobile
+
 - React Native
 - TypeScript
 - React Navigation
 - Redux Toolkit
 
 ### Backend & Services — Initial
+
 - Firebase Authentication
 - Cloud Firestore
 - Firebase Storage
 - Firebase Cloud Messaging
 
 ### Future Backend
+
 The initial Firebase implementation is being structured with future
 migration in mind.
 
@@ -217,4 +224,7 @@ blueprint have been established.
 ### Next milestone
 
 > **Sprint 1 — Technical Foundation & Project Setup**
+
+```
+
 ```
