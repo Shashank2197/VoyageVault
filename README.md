@@ -68,6 +68,22 @@ VoyageVault uses five primary navigation sections:
 | 💰 Split   | Expenses and settlements         |
 | 👤 Profile | Account and application settings |
 
+Trip-specific functionality is organized within individual trips rather
+than becoming separate global navigation items.
+
+````text
+Trip
+├── Overview
+├── Planner
+├── Budget
+├── Itinerary
+├── Checklist
+├── Notes
+├── Members
+├── Expenses
+└── Gallery
+
+
 ---
 
 # Step 8 — Add the technology stack
@@ -213,4 +229,4 @@ blueprint have been established.
 ### Next milestone
 
 > **Sprint 1 — Technical Foundation & Project Setup**
-```
+````
