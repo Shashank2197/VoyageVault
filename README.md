@@ -123,9 +123,7 @@ A dedicated backend using Node.js and Express.js may be introduced gradually as 
 
 The VoyageVault UI is based on the project Figma blueprint:
 
-https://www.figma.com/design/PPmAgavcomwTKhx3aMnnZn/Untitled
-
-The Figma file is treated as the visual blueprint for the application. Product requirements and implementation constraints can refine individual flows while preserving the established VoyageVault visual language.
+📐 [View VoyageVault UI Design](./docs/design/VoyageVault-UI-Design.pdf)
 
 ### Current Visual Foundation
 
