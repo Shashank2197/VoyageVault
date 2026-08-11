@@ -21,17 +21,12 @@ export const createStyles = (theme: AppTheme) =>
 
     inputWrapper: {
       minHeight: 52,
-
       flexDirection: "row",
       alignItems: "center",
-
       paddingHorizontal: theme.spacing.md,
-
       borderWidth: 1,
       borderColor: theme.colors.border,
-
       borderRadius: theme.radius.md,
-
       backgroundColor: theme.colors.surface,
     },
 
@@ -49,15 +44,11 @@ export const createStyles = (theme: AppTheme) =>
 
     input: {
       flex: 1,
-
-      paddingVertical: theme.spacing.sm,
-
       fontFamily: theme.typography.fontFamily.bodyRegular,
-
       fontSize: theme.typography.fontSize.md,
-      lineHeight: theme.typography.lineHeight.md,
-
       color: theme.colors.textPrimary,
+      paddingVertical: 0,
+      textAlignVertical: "center",
     },
 
     leftIcon: {

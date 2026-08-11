@@ -24,9 +24,9 @@ export const colors = {
   },
 
   semantic: {
-    success: "#20B978",
-    warning: "#F4A62A",
-    error: "#E5484D",
+    success: "#10B981",
+    warning: "#F59E0B",
+    error: "#EF4444",
     info: "#2387F5",
   },
 } as const;

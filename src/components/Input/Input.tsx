@@ -48,11 +48,8 @@ export function Input({
       <View
         style={[
           styles.inputWrapper,
-
           isFocused && styles.inputWrapperFocused,
-
           error && styles.inputWrapperError,
-
           disabled && styles.inputWrapperDisabled,
         ]}
       >

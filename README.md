@@ -88,17 +88,25 @@ Trip
 ### Mobile
 
 - React Native
-- Expo
+- Expo SDK 54
 - TypeScript
 - Expo Router
 - React Native StyleSheet
 - Lucide React Native
+
+### Forms & Validation
+
+- React Hook Form
+- Zod
+- `@hookform/resolvers`
 
 ### Design & UI
 
 - Outfit — display and heading typography
 - Inter — body typography
 - `expo-linear-gradient` — VoyageVault primary gradient
+- `expo-font` — font loading
+- `expo-splash-screen` — startup splash control
 - Centralized design tokens for colors, typography, spacing, radius, shadows, and themes
 - Separate style files for screens and components
 
@@ -123,7 +131,9 @@ A dedicated backend using Node.js and Express.js may be introduced gradually as 
 
 The VoyageVault UI is based on the project Figma blueprint:
 
-📐 [View VoyageVault UI Design](./docs/design/VoyageVault-UI-Design.pdf)
+https://www.figma.com/design/PPmAgavcomwTKhx3aMnnZn/Untitled
+
+The Figma file is treated as the visual blueprint for the application. Product requirements and implementation constraints can refine individual flows while preserving the established VoyageVault visual language.
 
 ### Current Visual Foundation
 
@@ -139,6 +149,11 @@ Charcoal
 
 Off-White
 #F8F9FA
+
+Semantic Colors
+Success → #10B981
+Warning → #F59E0B
+Error   → #EF4444
 
 Typography
 Outfit → Display / Headings
@@ -228,6 +243,218 @@ src/components/
 
 **Why:** building these primitives once prevents Login, Register, Forgot Password, Trips, Gallery, and other screens from duplicating the same UI logic and styling.
 
+#### 1.4 Login Screen ✅
+
+The first production authentication screen has been implemented from the Figma design.
+
+**Completed:**
+
+- Expo Router Login route
+- Figma-aligned Login UI
+- Reusable Email and Password inputs
+- Password visibility toggle
+- Forgot Password action
+- Google and Apple social-auth UI
+- Sign Up navigation
+- Real-device spacing and keyboard refinement
+- React Hook Form integration
+- Zod validation
+- Loading/submission state
+
+The Login form currently validates input locally. Actual account verification will be connected through Firebase Authentication later.
+
+#### 1.5 App Launch & Splash Foundation ✅
+
+The application startup foundation has been prepared around the VoyageVault native splash and font initialization.
+
+**Completed / established:**
+
+- VoyageVault splash branding asset
+- Expo splash configuration
+- Splash held while Outfit and Inter fonts initialize
+- Fade behavior configured
+- Startup structure prepared for later Firebase session restoration
+
+Firebase session restoration is intentionally deferred until authentication infrastructure is connected so the app does not maintain a fake authentication-loading state.
+
+#### 1.6 Authentication UI 🚧
+
+##### 1.6.1 Create Account ✅
+
+The Create Account screen has been implemented using the same reusable UI foundation as Login.
+
+**Completed:**
+
+- Full Name field
+- Email field
+- Password field
+- Confirm Password field
+- Password visibility controls
+- Dynamic password-strength indicator
+- Google and Apple social-auth UI
+- Login ↔ Register navigation
+- React Hook Form integration
+- Zod validation
+- Valid-form submission flow prepared for Firebase integration
+
+##### Validation Rules
+
+Registration validation is intentionally handled in the schema rather than directly inside the UI.
+
+```text
+Full Name
+├── Required
+├── Minimum 2 characters
+├── Maximum 60 characters
+└── Numbers are not allowed
+
+Email
+├── Required
+└── Must be a valid email address
+
+Password
+├── Required
+├── 8–64 characters
+├── At least 1 uppercase letter
+├── At least 1 lowercase letter
+├── At least 1 number
+├── At least 1 special character
+└── Spaces are not allowed
+
+Confirm Password
+└── Must match Password
+```
+
+Password strength is separate from password validity and provides visual guidance while typing.
+
+```text
+Weak    → Error / Red
+Fair    → Warning / Orange
+Good    → Success / Green
+Strong  → Success / Green
+```
+
+The bar count and label distinguish Good from Strong while both reuse the VoyageVault Success color.
+
+##### 1.6.2 Forgot Password ✅
+
+The Forgot Password screen has been implemented from the Figma design.
+
+**Completed:**
+
+- Expo Router `forgot-password` route
+- Back navigation
+- Email Address field
+- Email validation through React Hook Form + Zod
+- Send Reset Link submission state
+- Back to Login action
+- Login → Forgot Password navigation
+- Mobile keyboard behavior consistent with the other authentication screens
+
+For now a valid submission is handled locally. Firebase will later replace the temporary submission handler and send the actual password reset email.
+
+##### 1.6.3 Verify Your Email ⏭️ Next
+
+The next authentication screen will implement the Figma Verify Your Email flow with:
+
+- Open Email App
+- Resend Email
+- Back to Login
+
+After that:
+
+```text
+1.6.4 Reset Password
+1.6.5 Onboarding
+      ├── Plan the Journey
+      ├── Split the Expenses
+      └── Keep the Memories
+1.6.6 Full authentication UI/navigation test
+```
+
+---
+
+## 🧪 Current Form Architecture
+
+Authentication forms currently follow this responsibility split:
+
+```text
+React Hook Form
+→ Form values, submission state, Controllers
+
+Zod
+→ Input and cross-field validation
+
+Reusable Input / Button components
+→ Presentation and interaction
+
+Screen
+→ Navigation and submit orchestration
+
+authService
+→ Added during Firebase integration
+
+Firebase Authentication
+→ Real account/session operations
+```
+
+This keeps validation and backend concerns outside reusable visual components.
+
+---
+
+## 📁 Architecture Direction
+
+Expo Router is responsible for application routing, while feature implementation lives under `src`.
+
+```text
+VoyageVault/
+├── app/
+│   ├── _layout.tsx
+│   ├── index.tsx
+│   └── (auth)/
+│       ├── login.tsx
+│       ├── register.tsx
+│       └── forgot-password.tsx
+│
+├── assets/
+│   ├── branding/
+│   │   ├── voyagevault-logo.png
+│   │   └── voyagevault-splash.png
+│   └── icons/
+│       └── social/
+│           ├── google.png
+│           └── apple.png
+│
+├── src/
+│   ├── components/
+│   │   ├── Button/
+│   │   ├── Input/
+│   │   ├── DividerWithText/
+│   │   └── SocialAuthButton/
+│   │
+│   ├── features/
+│   │   └── auth/
+│   │       ├── schemas/
+│   │       │   ├── login.schema.ts
+│   │       │   ├── register.schema.ts
+│   │       │   └── forgotPassword.schema.ts
+│   │       ├── screens/
+│   │       │   ├── LoginScreen/
+│   │       │   ├── RegisterScreen/
+│   │       │   └── ForgotPasswordScreen/
+│   │       └── utils/
+│   │           └── passwordStrength.ts
+│   │
+│   ├── services/            # Firebase / integrations
+│   ├── shared/              # Shared hooks, types and utilities
+│   ├── store/               # Global state composition when required
+│   └── theme/               # VoyageVault design system
+│
+└── README.md
+```
+
+The project follows a feature-first approach: folders, libraries, state, and services are added when a feature actually needs them rather than generating the entire architecture upfront.
+
 ### Styling Convention
 
 Component and screen styles are intentionally kept separate from JSX.
@@ -250,48 +477,38 @@ A custom `ThemeProvider` and `useAppTheme()` hook will later provide the active 
 
 ---
 
-## 📁 Architecture Direction
-
-Expo Router is responsible for application routing, while feature implementation will live under `src`.
-
-```text
-VoyageVault/
-├── app/                    # Expo Router routes
-├── assets/
-│   └── icons/
-│       └── social/
-├── src/
-│   ├── components/         # Shared reusable UI
-│   ├── features/           # Product feature modules
-│   ├── services/           # Firebase / integrations
-│   ├── shared/             # Shared hooks, types and utilities
-│   ├── store/              # Global state composition when required
-│   └── theme/              # VoyageVault design system
-└── README.md
-```
-
-The project follows a feature-first approach: folders, libraries, state, and services are added when a feature actually needs them rather than generating the entire architecture upfront.
-
----
-
 ## 🎯 Current Milestone
 
-The technical and reusable UI foundation is now ready for real screen implementation.
-
-The next development milestone is the **Authentication module**, beginning with the Login screen from the Figma blueprint.
+VoyageVault has moved from technical foundation work into the Authentication module.
 
 ```text
 Authentication
-├── Login
-├── Register
-├── Forgot Password
+├── Login                         ✅
+├── Create Account               ✅
+├── Forgot Password              ✅
+├── Verify Your Email            ⏭️ Next
 ├── Reset Password
-├── Verify Email
-├── Google Sign-In
-└── Apple Sign-In
+├── Onboarding
+│   ├── Plan the Journey
+│   ├── Split the Expenses
+│   └── Keep the Memories
+├── Google Sign-In               UI prepared
+└── Apple Sign-In                UI prepared
 ```
 
-Authentication UI will be implemented first, followed by the required navigation and Firebase authentication integration.
+Authentication UI and navigation are being completed before Firebase integration.
+
+The next larger milestone after the remaining authentication screens is:
+
+```text
+Firebase Authentication
+↓
+Redux authentication state
+↓
+Session restoration and route protection
+↓
+Application Shell & Home
+```
 
 ---
 
@@ -300,7 +517,7 @@ Authentication UI will be implemented first, followed by the required navigation
 ```text
 Sprint 0  Discovery & Foundation                    ✅
 Sprint 1  Technical Foundation & Project Setup      🚧
-Sprint 2  Authentication
+Sprint 2  Authentication                            🚧
 Sprint 3  Application Shell & Home
 Sprint 4  Trips
 Sprint 5  Trip Planner
@@ -311,7 +528,37 @@ Sprint 9  Integration & Polish
 Sprint 10 Testing & Release
 ```
 
-The roadmap is intentionally flexible and may evolve as features are implemented and validated.
+### Authentication Roadmap
+
+```text
+Authentication UI
+├── Login                         ✅
+├── Create Account               ✅
+├── Forgot Password              ✅
+├── Verify Your Email            ⏭️
+├── Reset Password
+├── Onboarding
+└── Full UI/navigation test
+
+Firebase Authentication
+├── Firebase project/config
+├── authService abstraction
+├── Email registration
+├── Email verification
+├── Email/password login
+├── Forgot/reset password
+├── Logout
+├── Google authentication
+├── Apple authentication
+└── Firebase error handling
+
+Global Authentication
+├── Redux auth state
+├── Current user
+├── Session restoration
+├── Onboarding completion state
+└── Auth-aware routing
+```
 
 ---
 
@@ -347,6 +594,8 @@ Dependencies and folders are introduced only when they are required by the featu
 
 ## 📌 Project Status
 
-**Current phase:** Technical foundation complete enough to begin production screen development.
+**Current phase:** Authentication UI and navigation.
 
-**Next:** Authentication → Login Screen.
+**Completed recently:** Login, Create Account, registration/password validation, password-strength feedback, Forgot Password, and splash/startup foundation.
+
+**Next:** Authentication → Verify Your Email.
