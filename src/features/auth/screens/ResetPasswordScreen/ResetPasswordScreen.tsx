@@ -2,32 +2,31 @@ import { useState } from "react";
 
 import { Platform, Pressable, ScrollView, Text, View } from "react-native";
 
-import { Eye, EyeOff, LockKeyhole, Mail, UserRound } from "lucide-react-native";
+import { ArrowLeft, Eye, EyeOff, LockKeyhole } from "lucide-react-native";
 
 import { Controller, useForm } from "react-hook-form";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { router } from "expo-router";
+
 import { StatusBar } from "expo-status-bar";
 
 import { Button } from "../../../../components/Button";
-import { DividerWithText } from "../../../../components/DividerWithText";
 import { Input } from "../../../../components/Input";
-import { SocialAuthButton } from "../../../../components/SocialAuthButton";
 
 import { lightTheme } from "../../../../theme";
 
 import {
-  RegisterFormData,
-  registerSchema,
-} from "../../schemas/register.schema";
+  ResetPasswordFormData,
+  resetPasswordSchema,
+} from "../../schemas/resetPassword.schema";
 
 import { getPasswordStrength } from "../../utils/passwordStrength";
 
-import { createStyles } from "./RegisterScreen.styles";
+import { createStyles } from "./ResetPasswordScreen.styles";
 
-export function RegisterScreen() {
+export function ResetPasswordScreen() {
   const theme = lightTheme;
   const styles = createStyles(theme);
 
@@ -40,18 +39,16 @@ export function RegisterScreen() {
     handleSubmit,
     watch,
     formState: { errors, isSubmitting },
-  } = useForm<RegisterFormData>({
-    resolver: zodResolver(registerSchema),
+  } = useForm<ResetPasswordFormData>({
+    resolver: zodResolver(resetPasswordSchema),
 
     defaultValues: {
-      fullName: "",
-      email: "",
-      password: "",
+      newPassword: "",
       confirmPassword: "",
     },
   });
 
-  const password = watch("password");
+  const password = watch("newPassword");
 
   const passwordStrength = getPasswordStrength(password);
 
@@ -74,26 +71,15 @@ export function RegisterScreen() {
 
   const strengthColor = getStrengthColor();
 
-  const onSubmit = async (data: RegisterFormData) => {
-    console.log("Valid registration data:", data);
-    router.replace({
-      pathname: "/verify-email",
-      params: {
-        email: data.email,
-      },
-    });
-  };
-
-  const handleGoogleRegister = () => {
-    console.log("Google registration pressed");
-  };
-
-  const handleAppleRegister = () => {
-    console.log("Apple registration pressed");
-  };
-
-  const handleLogin = () => {
+  const handleBackToLogin = () => {
     router.replace("/login");
+  };
+
+  const onSubmit = async (data: ResetPasswordFormData) => {
+    console.log("Valid reset password data:", data);
+
+    // Firebase password reset will
+    // be connected later.
   };
 
   return (
@@ -110,70 +96,41 @@ export function RegisterScreen() {
       >
         <View style={styles.container}>
           <View style={styles.mainContent}>
-            <View style={styles.header}>
-              <Text style={styles.title}>Create Account</Text>
+            <Pressable
+              onPress={handleBackToLogin}
+              hitSlop={8}
+              style={styles.backButton}
+              accessibilityRole="button"
+              accessibilityLabel="Back to login"
+            >
+              <ArrowLeft size={20} color={theme.colors.textPrimary} />
+            </Pressable>
 
-              <Text style={styles.subtitle}>
-                Sign up to start planning with your group
+            <View style={styles.header}>
+              <Text style={styles.title}>Reset Password</Text>
+
+              <Text style={styles.description}>
+                Secure your VoyageVault account by setting a robust new
+                password. Choose a combination of letters, numbers, and symbols.
               </Text>
             </View>
 
             <View style={styles.form}>
-              {/* Full Name */}
-              <Controller
-                control={control}
-                name="fullName"
-                render={({ field: { value, onChange } }) => (
-                  <Input
-                    label="Full Name"
-                    value={value}
-                    placeholder="Alex Rivers"
-                    onChangeText={onChange}
-                    autoCapitalize="words"
-                    error={errors.fullName?.message}
-                    leftIcon={
-                      <UserRound size={20} color={theme.colors.textSecondary} />
-                    }
-                  />
-                )}
-              />
-
-              {/* Email */}
-              <Controller
-                control={control}
-                name="email"
-                render={({ field: { value, onChange } }) => (
-                  <Input
-                    label="Email Address"
-                    value={value}
-                    placeholder="alex@voyagevault.com"
-                    onChangeText={onChange}
-                    keyboardType="email-address"
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    error={errors.email?.message}
-                    leftIcon={
-                      <Mail size={20} color={theme.colors.textSecondary} />
-                    }
-                  />
-                )}
-              />
-
-              {/* Password */}
+              {/* New Password */}
               <View>
                 <Controller
                   control={control}
-                  name="password"
+                  name="newPassword"
                   render={({ field: { value, onChange } }) => (
                     <Input
-                      label="Password"
+                      label="New Password"
                       value={value}
-                      placeholder="Enter your password"
+                      placeholder="Enter your new password"
                       onChangeText={onChange}
                       secureTextEntry={!showPassword}
                       autoCapitalize="none"
                       autoCorrect={false}
-                      error={errors.password?.message}
+                      error={errors.newPassword?.message}
                       leftIcon={
                         <LockKeyhole
                           size={20}
@@ -236,7 +193,7 @@ export function RegisterScreen() {
                   <Input
                     label="Confirm Password"
                     value={value}
-                    placeholder="Repeat your password"
+                    placeholder="Repeat your new password"
                     onChangeText={onChange}
                     secureTextEntry={!showConfirmPassword}
                     autoCapitalize="none"
@@ -265,37 +222,13 @@ export function RegisterScreen() {
               />
 
               <Button
-                title="Create Account"
+                title="Reset Password"
                 fullWidth
                 loading={isSubmitting}
                 disabled={isSubmitting}
                 onPress={handleSubmit(onSubmit)}
               />
-
-              <DividerWithText />
-
-              <View style={styles.socialRow}>
-                <SocialAuthButton
-                  title="Google"
-                  icon={require("../../../../../assets/icons/social/google.png")}
-                  onPress={handleGoogleRegister}
-                />
-
-                <SocialAuthButton
-                  title="Apple"
-                  icon={require("../../../../../assets/icons/social/apple.png")}
-                  onPress={handleAppleRegister}
-                />
-              </View>
             </View>
-          </View>
-
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>Already have an account? </Text>
-
-            <Pressable onPress={handleLogin} hitSlop={8}>
-              <Text style={styles.loginText}>Log In</Text>
-            </Pressable>
           </View>
         </View>
       </ScrollView>

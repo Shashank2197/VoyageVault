@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-
 import {
   Inter_400Regular,
   Inter_500Medium,
@@ -7,13 +5,14 @@ import {
   Inter_700Bold,
   useFonts as useInterFonts,
 } from "@expo-google-fonts/inter";
-
 import {
   Outfit_600SemiBold,
   Outfit_700Bold,
   Outfit_800ExtraBold,
   useFonts as useOutfitFonts,
 } from "@expo-google-fonts/outfit";
+import { useEffect } from "react";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -54,10 +53,12 @@ export default function RootLayout() {
   }
 
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-      }}
-    />
+    <SafeAreaProvider>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+        }}
+      />
+    </SafeAreaProvider>
   );
 }
